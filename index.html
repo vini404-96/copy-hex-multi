@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Copy HEX – Multi</title>
+  <style>
+    :root { --fg:#111827; --muted:#6b7280; --bd:#e5e7eb; }
+    body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+           color:var(--fg); margin:0; padding:24px; }
+    h1 { margin:0 0 8px 0; }
+    p.muted { color:var(--muted); margin:0 0 24px 0; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px; }
+    .card { border:1px solid var(--bd); border-radius:14px; padding:16px; }
+    .swatch { width:64px; height:64px; border-radius:10px; border:1px solid var(--bd); }
+    .row { display:flex; align-items:center; gap:12px; }
+    .name { font-weight:600; }
+    .link { margin-top:8px; font-size:14px; }
+    code { background:#f3f4f6; padding:2px 6px; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <h1>Copy HEX – Multi</h1>
+  <p class="muted">Clique em um item para abrir a página de cópia automática. Use esses links nos botões do Figma.</p>
+  <div id="grid" class="grid"></div>
+
+  <script>
+    async function load() {
+      const res = await fetch('tokens.json', {cache: 'no-store'});
+      const tokens = await res.json();
+      const grid = document.getElementById('grid');
+      for (const [name, hex] of Object.entries(tokens)) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = \`
+          <div class="row">
+            <div class="swatch" style="background:\${hex}"></div>
+            <div>
+              <div class="name">\${name}</div>
+              <div>\${hex}</div>
+            </div>
+          </div>
+          <div class="link">
+            <div>Por nome: <code>copy.html?name=\${encodeURIComponent(name)}</code></div>
+            <div>Por valor: <code>copy.html?v=\${encodeURIComponent(hex)}</code></div>
+          </div>
+        \`;
+        grid.appendChild(card);
+      }
+    }
+    load();
+  </script>
+</body>
+</html>
